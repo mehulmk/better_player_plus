@@ -37,15 +37,8 @@ class BetterPlayerAsmsTrack {
   final String? mimeType;
 
   @override
-  bool operator ==(Object other) =>
-      other is BetterPlayerAsmsTrack &&
-      width == other.width &&
-      height == other.height &&
-      bitrate == other.bitrate &&
-      frameRate == other.frameRate &&
-      codecs == other.codecs &&
-      mimeType == other.mimeType;
+  bool operator ==(Object other) => other is BetterPlayerAsmsTrack && width == other.width && height == other.height;
 
   @override
-  int get hashCode => Object.hash(id, width, height, bitrate, frameRate, codecs, mimeType);
+  int get hashCode => Object.hash(id, width, height);
 }
