@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:better_player_plus/src/configuration/better_player_controller_event.dart';
 import 'package:better_player_plus/src/core/better_player_utils.dart';
@@ -114,7 +115,12 @@ class BetterPlayerController {
   ///Stream controller which emits next video time.
   final StreamController<int?> _nextVideoTimeStreamController = StreamController.broadcast();
 
+  ///Stream controller which emits previous video time.
+  final StreamController<int?> _previousVideoTimeStreamController = StreamController.broadcast();
+
   Stream<int?> get nextVideoTimeStream => _nextVideoTimeStreamController.stream;
+
+  Stream<int?> get previousVideoTimeStream => _previousVideoTimeStreamController.stream;
 
   ///Has player been disposed.
   bool _disposed = false;
@@ -829,6 +835,12 @@ class BetterPlayerController {
     cancelNextVideoTimer();
   }
 
+  ///Play previous video form playlist. Do not use manually.
+  void playPreviousVideo() {
+    _previousVideoTimeStreamController.add(0);
+    _postEvent(BetterPlayerEvent(BetterPlayerEventType.changedPlaylistItem));
+  }
+
   ///Setup track parameters for currently played video. Can be only used for HLS or DASH
   ///data source.
   void setTrack(BetterPlayerAsmsTrack track) {
@@ -1209,6 +1221,7 @@ class BetterPlayerController {
       _eventListeners.clear();
       _nextVideoTimer?.cancel();
       _nextVideoTimeStreamController.close();
+      _previousVideoTimeStreamController.close();
       _controlsVisibilityStreamController.close();
       _videoEventStreamSubscription?.cancel();
       _disposed = true;

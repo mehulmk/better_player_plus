@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:better_player_plus/src/configuration/better_player_controls_configuration.dart';
 import 'package:better_player_plus/src/controls/better_player_clickable_widget.dart';
 import 'package:better_player_plus/src/controls/better_player_controls_state.dart';
@@ -8,7 +9,6 @@ import 'package:better_player_plus/src/controls/better_player_progress_colors.da
 import 'package:better_player_plus/src/core/better_player_controller.dart';
 import 'package:better_player_plus/src/core/better_player_utils.dart';
 import 'package:better_player_plus/src/video_player/video_player.dart';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -307,9 +307,11 @@ class _BetterPlayerMaterialControlsState extends BetterPlayerControlsState<Bette
         : Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              if (_controlsConfiguration.isPlaylist) Expanded(child: _buildPreviousButton()) else const SizedBox(),
               if (_controlsConfiguration.enableSkips) Expanded(child: _buildSkipButton()) else const SizedBox(),
               Expanded(child: _buildReplayButton(_controller!)),
               if (_controlsConfiguration.enableSkips) Expanded(child: _buildForwardButton()) else const SizedBox(),
+              if (_controlsConfiguration.isPlaylist) Expanded(child: _buildNextButton()) else const SizedBox(),
             ],
           ),
   );
@@ -330,19 +332,41 @@ class _BetterPlayerMaterialControlsState extends BetterPlayerControlsState<Bette
     ),
   );
 
-  Widget _buildSkipButton() => _buildHitAreaClickableButton(
+  Widget _buildHitAreaClickableButtonNew({Widget? icon, required void Function() onClicked}) {
+    return InkWell(
+      onTap: onClicked,
+      borderRadius: BorderRadius.circular(48),
+      child: Padding(padding: const EdgeInsets.all(8), child: icon!),
+    );
+  }
+
+  Widget _buildSkipButton() => _buildHitAreaClickableButtonNew(
     icon: Icon(_controlsConfiguration.skipBackIcon, size: 24, color: _controlsConfiguration.iconsColor),
     onClicked: skipBack,
   );
 
-  Widget _buildForwardButton() => _buildHitAreaClickableButton(
+  Widget _buildForwardButton() => _buildHitAreaClickableButtonNew(
     icon: Icon(_controlsConfiguration.skipForwardIcon, size: 24, color: _controlsConfiguration.iconsColor),
     onClicked: skipForward,
   );
 
+  Widget _buildNextButton() {
+    return _buildHitAreaClickableButtonNew(
+      icon: Icon(Icons.skip_next_sharp, size: 24, color: _controlsConfiguration.iconsColor),
+      onClicked: next,
+    );
+  }
+
+  Widget _buildPreviousButton() {
+    return _buildHitAreaClickableButtonNew(
+      icon: Icon(Icons.skip_previous_sharp, size: 24, color: _controlsConfiguration.iconsColor),
+      onClicked: previous,
+    );
+  }
+
   Widget _buildReplayButton(VideoPlayerController controller) {
     final bool isFinished = isVideoFinished(_latestValue);
-    return _buildHitAreaClickableButton(
+    return _buildHitAreaClickableButtonNew(
       icon: isFinished
           ? Icon(Icons.replay, size: 42, color: _controlsConfiguration.iconsColor)
           : Icon(

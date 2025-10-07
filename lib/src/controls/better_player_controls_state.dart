@@ -53,6 +53,20 @@ abstract class BetterPlayerControlsState<T extends StatefulWidget> extends State
     }
   }
 
+  void next() {
+    if (latestValue != null) {
+      cancelAndRestartTimer();
+      betterPlayerController!.playNextVideo();
+    }
+  }
+
+  void previous() {
+    if (latestValue != null) {
+      cancelAndRestartTimer();
+      betterPlayerController!.playPreviousVideo();
+    }
+  }
+
   void onShowMoreClicked() {
     _showModalBottomSheet([_buildMoreOptionsList()]);
   }

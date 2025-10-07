@@ -58,6 +58,7 @@ class BetterPlayerControlsConfiguration {
     this.backgroundColor = Colors.black,
     this.overflowModalColor = Colors.white,
     this.overflowModalTextColor = Colors.black,
+    this.isPlaylist = false,
   });
 
   factory BetterPlayerControlsConfiguration.white() => const BetterPlayerControlsConfiguration(
@@ -90,6 +91,8 @@ class BetterPlayerControlsConfiguration {
 
   ///Color of texts
   final Color textColor;
+
+  final bool isPlaylist;
 
   ///Color of icons
   final Color iconsColor;
